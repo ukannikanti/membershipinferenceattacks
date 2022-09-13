@@ -81,7 +81,7 @@ def Target_Model_pred_fn(Target_Model, X_test):
     elif(isinstance(Target_Model, LR)):
         pred_proba = Target_Model.predict_proba(X_test)
     else:
-        pred_proba = Target_Model.predict_proba(X_test)
+        pred_proba = Target_Model.predict_prob(X_test)
     return pred_proba
 
 def fn_R_given_Selected(dataset, IN_or_OUT = 1):

@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 def funcname(parameter_list):
     pass
 
-def data_reader(data_name = "adult"):
+def data_reader(data_name = "diabetes"):
     if(data_name == "adult"):
         #load data
         file_path = "./data/adult/"
@@ -103,6 +103,19 @@ def data_reader(data_name = "adult"):
             [('oh_enc', OneHotEncoder(sparse=False), categorical_features),], 
             remainder='passthrough' )
         oh_data = oh_encoder.fit_transform(data)
+
+    elif data_name == "diabetes":
+        file_path = './data/diabetes/'
+        data = pd.read_csv(file_path + 'diabetes.csv')
+        data = np.array(data)
+        labels = data[:, -1]
+        data = data[:, :-1]
+        categorical_features = []
+        data = data / data.max()
+        oh_encoder = ColumnTransformer(
+            [('oh_enc', OneHotEncoder(sparse=False), categorical_features), ],
+            remainder='passthrough')
+        oh_data = oh_encoder.fit_transform(data)
         
     else:
         
@@ -127,7 +140,7 @@ def data_reader(data_name = "adult"):
         labels = y_train
         
     #randomly select 10000 records as training data
-    train_idx = np.random.choice(len(labels), 10000, replace = False)
+    train_idx = np.random.choice(len(labels), 10, replace = False)
     idx = range(len(labels))
     idx = np.array(idx)
     test_idx = list(set(idx).difference(set(train_idx)))

@@ -11,16 +11,15 @@ from sklearn.metrics import precision_score, recall_score
 from sklearn.cluster import SpectralClustering
 
 from data_preprocessing import data_reader
-from target_model_data import Target_Model_pred_fn
-from target_model_data import fn_R_given_Selected
+from computation_utils import Target_Model_pred_fn
+from computation_utils import fn_R_given_Selected
 from computation_utils import fn_Sample_Generator
 from computation_utils import fn_Jacobian_Calculation
-
 
 np.random.seed(seed=14)
 torch.manual_seed(14)
 
-datasets = ["mnist"]
+datasets = ["diabetes"]
 # datasets = ["purchase_2", "purchase_10", "purchase_20", "purchase_50",]
 target_models = ["LR"]
 # target_models = ["RF", "NN", "LR", "SVM", "DT"]
@@ -44,19 +43,18 @@ for dataset in datasets:
         np.random.seed(seed=attack_args.seed)
         torch.manual_seed(attack_args.seed)
         filename = dataset + "_" + model + ".pkl"
-        print(filename)
+
         # load data
         orig_dataset, oh_dataset, OH_Encoder = data_reader(dataset)
-
         class_label_for_count = np.unique(np.hstack([orig_dataset["Y_train"], orig_dataset["Y_test"]]))
 
         n_class = len(class_label_for_count)
         n_features = orig_dataset['X_train'].shape[1]
         Target_Model = None
         # load pretrained target model
-        with open('target_models/' + filename, 'rb') as f:
+        with open('./target_models/' + filename, 'rb') as f:
             Target_Model = pickle.load(f)
-        y_attack = np.hstack(([np.ones(int(attack_args.n_attack/2)), np.zeros(int(attack_args.n_attack/2))]))
+        y_attack = np.hstack(([np.ones(int(attack_args.n_attack / 2)), np.zeros(int(attack_args.n_attack / 2))]))
         x_attack = np.zeros((int(attack_args.n_attack), n_features))
         Jacobian_matrix = np.zeros([attack_args.n_attack, n_class, n_features])
 
@@ -83,7 +81,7 @@ for dataset in datasets:
             np.save(f'data/test_data/{dataset}_{model}_x.npy', output_x)
             np.save(f'data/test_data/{dataset}_{model}_y.npy', output_y)
             np.save(f'data/test_data/{dataset}_{model}_class.npy', classes)
-        
+
         Jacobian_norms = LA.norm(Jacobian_matrix, axis=(1, 2))
         # ====================================================================
         split = 1
@@ -96,15 +94,13 @@ for dataset in datasets:
         cluster_1_mean_norm = Jacobian_norms[cluster_1].mean()
         cluster_0_mean_norm = Jacobian_norms[cluster_0].mean()
         if cluster_1_mean_norm > cluster_0_mean_norm:
-            y_attack_pred = np.abs(y_attack_pred-1)
+            y_attack_pred = np.abs(y_attack_pred - 1)
         # ====================================================================
         precision = precision_score(y_attack, y_attack_pred)
         recall = recall_score(y_attack, y_attack_pred)
-        f1_score = 2*precision*recall/(precision+recall)
-        print(precision, recall, f1_score)
+        f1_score = 2 * precision * recall / (precision + recall)
+        print("Precision: {}  Recall: {}  F1_Score: {}".format( precision, recall, f1_score))
         precisions.append(precision)
         recalls.append(recall)
         f1_scores.append(f1_score)
 
-print("average")
-print(sum(precisions)/len(precisions), sum(recalls)/len(recalls), sum(f1_scores)/len(f1_scores))
