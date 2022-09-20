@@ -116,9 +116,21 @@ def data_reader(data_name = "diabetes"):
             [('oh_enc', OneHotEncoder(sparse=False), categorical_features), ],
             remainder='passthrough')
         oh_data = oh_encoder.fit_transform(data)
+
+    elif data_name == "heartbeat":
+        file_path = './data/heartbeat/'
+        data = pd.read_csv(file_path + 'heartbeat.csv')
+        data = np.array(data)
+        labels = data[:, -1]
+        data = data[:, :-1]
+        categorical_features = []
+        data = data / data.max()
+        oh_encoder = ColumnTransformer(
+            [('oh_enc', OneHotEncoder(sparse=False), categorical_features), ],
+            remainder='passthrough')
+        oh_data = oh_encoder.fit_transform(data)
         
     else:
-        
         str_list = data_name.split('_')
         file_path = "./data/purchase/"
         data = pd.read_csv(file_path+'dataset_purchase')

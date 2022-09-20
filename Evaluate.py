@@ -19,13 +19,12 @@ from computation_utils import fn_Jacobian_Calculation
 np.random.seed(seed=14)
 torch.manual_seed(14)
 
-datasets = ["diabetes"]
+datasets = ["diabetes", "heartbeat"]
 # datasets = ["purchase_2", "purchase_10", "purchase_20", "purchase_50",]
-target_models = ["LR"]
+target_models = ["LR", "RF", "NN"]
 # target_models = ["RF", "NN", "LR", "SVM", "DT"]
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--n_sample', type=int, default=5000)
 parser.add_argument('--n_attack', type=int, default=50)
 parser.add_argument('--seed', type=int, default=140)
 parser.add_argument('--neighbors', type=int, default=40)
@@ -40,6 +39,7 @@ f1_scores = []
 
 for dataset in datasets:
     for model in target_models:
+        print(model)
         np.random.seed(seed=attack_args.seed)
         torch.manual_seed(attack_args.seed)
         filename = dataset + "_" + model + ".pkl"
