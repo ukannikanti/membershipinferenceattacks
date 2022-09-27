@@ -10,7 +10,6 @@ from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression as LR
 from sklearn.neural_network import MLPClassifier as NN
 
-from data_preprocessing import data_reader
 
 categorical_list ={
     "adult": [1,3,5,6,7,8,9,13],
@@ -18,10 +17,9 @@ categorical_list ={
     "null": [],
 }
 
-def fn_Sample_Generator(R_given, dataset):
+def fn_Sample_Generator(R_given, dataset, epsilon):
     if not dataset in categorical_list.keys():
         dataset = "null"
-    epsilon = 1e-6
     R_given = R_given.reshape([1, -1])
     n_feature = R_given.shape[1]
     local_samples = np.repeat(R_given, repeats=n_feature, axis=0)

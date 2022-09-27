@@ -7,13 +7,12 @@ from sklearn.metrics import accuracy_score
 import pickle
 
 # Load the dataset
+from Diabetes_NN import test_labels
+
 df = pd.read_csv("data/heartbeat/heartbeat.csv")
+test_df = pd.read_csv("data/heartbeat/heartbeat_test.csv")
 
-# Clean, split the data into test & train
-# Use a utility from sklearn to split and shuffle your dataset.
-train_df, test_df = train_test_split(df, test_size=0.1)
-
-train_df = np.array(train_df)
+train_df = np.array(df)
 test_df = np.array(test_df)
 
 train_labels = np.array(train_df[:, -1])
@@ -35,12 +34,16 @@ print('Test labels shape:', test_labels.shape)
 print('Training features shape:', train_features.shape)
 print('Test features shape:', test_features.shape)
 
-clf = MLPClassifier(random_state=1, max_iter=64).fit(train_features, train_labels)
+clf = MLPClassifier(hidden_layer_sizes=(64, 32, 16),
+                    max_iter=16, activation='relu',
+                    solver='adam') \
+    .fit(train_features, train_labels)
+
 predict_proba = clf.predict_proba(test_features)
-predictions= clf.predict(test_features)
-print("Test Accuracy: ",  accuracy_score(predictions, test_labels))
+predictions = clf.predict(test_features)
+print("Test Accuracy: ", accuracy_score(predictions, test_labels))
+print(predictions, test_labels)
 
 # save
 with open('target_models/heartbeat_NN.pkl', 'wb') as f:
     pickle.dump(clf, f)
-

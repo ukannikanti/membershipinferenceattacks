@@ -1,0 +1,7 @@
+model,dataset,epsilon,num_of_samples_from_training_set,precision_mean,recall_mean,precision_var,recall_var
+NN,diabetes,0.01,100,0.5135135135135135,0.76,0.0,0.0
+RF,diabetes,0.01,100,0.4444444444444444,0.16,0.0,0.0
+LR,diabetes,0.01,100,0.5,0.88,0.0,0.0
+NN,diabetes,0.001,100,0.5365853658536586,0.88,0.0,0.0
+RF,diabetes,0.001,100,0.5368663594470046,0.46,0.023455584106691584,0.23120000000000004
+LR,diabetes,0.001,100,0.5,0.88,0.0,0.0

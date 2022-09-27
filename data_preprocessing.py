@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 def funcname(parameter_list):
     pass
 
-def data_reader(data_name = "diabetes"):
+def data_reader(data_name = "diabetes", training_samples = 100):
     if(data_name == "adult"):
         #load data
         file_path = "./data/adult/"
@@ -152,7 +152,7 @@ def data_reader(data_name = "diabetes"):
         labels = y_train
         
     #randomly select 10000 records as training data
-    train_idx = np.random.choice(len(labels), 10, replace = False)
+    train_idx = np.random.choice(len(labels), training_samples, replace = False)
     idx = range(len(labels))
     idx = np.array(idx)
     test_idx = list(set(idx).difference(set(train_idx)))
